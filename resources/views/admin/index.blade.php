@@ -1,3 +1,16 @@
+<?php
+
+use App\Models\Cart;
+use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\BillingAddress;
+
+$user_id = Auth::id();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,14 +67,14 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="products.html">
+                            <a class="nav-link" href="/all_products">
                                 <i class="fas fa-shopping-cart"></i>
                                 Products
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="accounts.html">
+                            <a class="nav-link" href="#">
                                 <i class="far fa-user"></i>
                                 Accounts
                             </a>
@@ -82,7 +95,7 @@
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link d-block" href="login.html">
+                            <a class="nav-link d-block" href="/logout">
                                 Admin, <b>Logout</b>
                             </a>
                         </li>
@@ -99,7 +112,7 @@
             </div>
             <!-- row -->
             <div class="row tm-content-row">
-                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+                <!-- <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
                     <div class="tm-bg-primary-dark tm-block">
                         <h2 class="tm-block-title">Latest Hits</h2>
                         <canvas id="lineChart"></canvas>
@@ -110,7 +123,7 @@
                         <h2 class="tm-block-title">Performance</h2>
                         <canvas id="barChart"></canvas>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
                     <div class="tm-bg-primary-dark tm-block tm-block-taller">
                         <h2 class="tm-block-title">Storage Information</h2>
@@ -125,20 +138,17 @@
                         <div class="tm-notification-items">
                             <?php
 
-                            use Illuminate\Support\Facades\DB;
-                            use App\Models\User;
+                            $result = DB::table('notifications')->where('read_at', null)->latest()->get();
 
-                            $result = DB::table('notifications')->get();
                             foreach ($result as $p) {
-
-                                $detail = User::find($p->notifiable_id)
                             ?>
 
                                 <div class="media tm-notification-item">
                                     <div class="tm-gray-circle"><img src="img/notification-01.jpg" alt="Avatar Image" class="rounded-circle"></div>
                                     <div class="media-body">
-                                        <p class="mb-2"><b>{{$detail['name']}}</b> <?php echo json_decode($p->data)->message ?>
-                                            <span class="tm-small tm-text-color-secondary"><?php echo $p->created_at; ?></span>
+                                        <p class="mb-2"><b><?Php echo json_decode($p->data)->message; ?></b> has subscribed your Site. <br>
+                                            <span class="tm-small tm-text-color-secondary">{{ \Carbon\Carbon::parse($p->created_at)->format('d M, Y \a\t h:i') }}</span>
+                                            &nbsp;&nbsp; <a href="{{ route('markasread', $p->id) }}" class="tm-small text-warning">Mark as Read</a>
                                     </div>
                                 </div>
                             <?php
@@ -153,148 +163,94 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">ORDER NO.</th>
-                                    <th scope="col">STATUS</th>
-                                    <th scope="col">OPERATORS</th>
-                                    <th scope="col">LOCATION</th>
-                                    <th scope="col">DISTANCE</th>
-                                    <th scope="col">START DATE</th>
-                                    <th scope="col">EST DELIVERY DUE</th>
+                                    <th scope="col">Order Id</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Qty</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Order Status</th>
+                                    <th scope="col">Payment Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row"><b>#122349</b></th>
-                                    <td>
-                                        <div class="tm-status-circle moving">
-                                        </div>Moving
-                                    </td>
-                                    <td><b>Oliver Trag</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>485 km</b></td>
-                                    <td>16:00, 12 NOV 2018</td>
-                                    <td>08:00, 18 NOV 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122348</b></th>
-                                    <td>
-                                        <div class="tm-status-circle pending">
-                                        </div>Pending
-                                    </td>
-                                    <td><b>Jacob Miller</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>360 km</b></td>
-                                    <td>11:00, 10 NOV 2018</td>
-                                    <td>04:00, 14 NOV 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122347</b></th>
-                                    <td>
-                                        <div class="tm-status-circle cancelled">
-                                        </div>Cancelled
-                                    </td>
-                                    <td><b>George Wilson</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>340 km</b></td>
-                                    <td>12:00, 22 NOV 2018</td>
-                                    <td>06:00, 28 NOV 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122346</b></th>
-                                    <td>
-                                        <div class="tm-status-circle moving">
-                                        </div>Moving
-                                    </td>
-                                    <td><b>William Aung</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>218 km</b></td>
-                                    <td>15:00, 10 NOV 2018</td>
-                                    <td>09:00, 14 NOV 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122345</b></th>
-                                    <td>
-                                        <div class="tm-status-circle pending">
-                                        </div>Pending
-                                    </td>
-                                    <td><b>Harry Ryan</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>280 km</b></td>
-                                    <td>15:00, 11 NOV 2018</td>
-                                    <td>09:00, 17 NOV 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122344</b></th>
-                                    <td>
-                                        <div class="tm-status-circle pending">
-                                        </div>Pending
-                                    </td>
-                                    <td><b>Michael Jones</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>218 km</b></td>
-                                    <td>18:00, 12 OCT 2018</td>
-                                    <td>06:00, 18 OCT 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122343</b></th>
-                                    <td>
-                                        <div class="tm-status-circle moving">
-                                        </div>Moving
-                                    </td>
-                                    <td><b>Timmy Davis</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>218 km</b></td>
-                                    <td>12:00, 10 OCT 2018</td>
-                                    <td>08:00, 18 OCT 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122342</b></th>
-                                    <td>
-                                        <div class="tm-status-circle moving">
-                                        </div>Moving
-                                    </td>
-                                    <td><b>Oscar Phyo</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>420 km</b></td>
-                                    <td>15:30, 06 OCT 2018</td>
-                                    <td>09:30, 16 OCT 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122341</b></th>
-                                    <td>
-                                        <div class="tm-status-circle moving">
-                                        </div>Moving
-                                    </td>
-                                    <td><b>Charlie Brown</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>300 km</b></td>
-                                    <td>11:00, 10 OCT 2018</td>
-                                    <td>03:00, 14 OCT 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122340</b></th>
-                                    <td>
-                                        <div class="tm-status-circle cancelled">
-                                        </div>Cancelled
-                                    </td>
-                                    <td><b>Wilson Cookies</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>218 km</b></td>
-                                    <td>17:30, 12 OCT 2018</td>
-                                    <td>08:30, 22 OCT 2018</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><b>#122339</b></th>
-                                    <td>
-                                        <div class="tm-status-circle moving">
-                                        </div>Moving
-                                    </td>
-                                    <td><b>Richard Clamon</b></td>
-                                    <td><b>London, UK</b></td>
-                                    <td><b>150 km</b></td>
-                                    <td>15:00, 12 OCT 2018</td>
-                                    <td>09:20, 26 OCT 2018</td>
-                                </tr>
+                                <?php
+
+                                $result = Order::latest()->get();
+
+                                $subTotal = $totalDiscount = $ship_charge = 0;
+                                $netTotal = $i = 0;
+                                foreach ($result as $order) {
+                                    $i++;
+
+
+                                    // $Total = $item->quantity * $detail->price;
+                                    // $subTotal += $Total;
+                                    $user_id = $order->user_id;
+                                    $buyer = User::find($user_id);
+                                    $add = BillingAddress::find($order->address);
+                                    $id = $order->product_id;
+                                    $qty = $order->qty;
+                                    $ids = explode(',', $id);
+
+                                    $qtys = explode(',', $qty);
+
+                                    $order_date = $order->created_at;
+
+                                    $i = 0;
+                                    foreach ($ids as $id) {
+
+                                        if ($id == '')
+                                            continue;
+
+                                        $detail = Product::find($id);
+                                        // moving, pending,cancelled
+                                ?>
+                                        <tr>
+                                            <td><b>#{{ $order->id }}</b></td>
+                                            <td><img src="{{ asset('storage/img/' . $detail->image) }}" height="50px" width="50px"></td>
+
+                                            <td><b>{{$detail->product_name}}</b></td>
+                                            <td><b>{{ $qtys[$i] }}</b></td>
+                                            <td><b>&#8377; {{ ($detail->price - $detail->discount) }}</b></td>
+                                            <td>{{$buyer->email}}</td>
+                                            <td>{{ $add->city }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('h:i\, d M Y') }}</td>
+                                            <td>
+                                                <div class="tm-status-circle <?php if ($order->order_status == 'PENDING') {
+                                                                                    echo "pending";
+                                                                                } else if ($order->order_status == 'COMPLETED') {
+                                                                                    echo "moving";
+                                                                                } ?>">
+                                                </div><?php if ($order->order_status == 'PENDING') {
+                                                            echo "PENDING";
+                                                        } else if ($order->order_status == 'COMPLETED') {
+                                                            echo "COMPLETED";
+                                                        } ?>
+                                            </td>
+                                            <td>
+                                                <div class="tm-status-circle <?php if ($order->payment_status == 'PENDING') {
+                                                                                    echo "pending";
+                                                                                } else if ($order->payment_status == 'PAID') {
+                                                                                    echo "moving";
+                                                                                } ?>">
+                                                </div><?php if ($order->payment_status == 'PENDING') {
+                                                            echo "PENDING";
+                                                        } else if ($order->payment_status == 'PAID') {
+                                                            echo "PAID";
+                                                        } ?>
+                                            </td>
+                                        </tr>
+
+                                <?php
+                                        $i++;
+                                    }
+                                }
+
+                                ?>
+
                             </tbody>
                         </table>
                     </div>

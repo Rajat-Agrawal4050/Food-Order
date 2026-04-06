@@ -13,13 +13,17 @@ return new class extends Migration
     {
         //
         Schema::create('orders', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();  // creates primary key col with auto increment
             $table->string('product_id');
             $table->integer('user_id');
             $table->string('qty');
             $table->integer('discount');
             $table->integer('amount');
-            $table->string('payment_method');
+            $table->integer('address');
+            $table->string('payment_method',20);
+            $table->string('order_status',20);
+            $table->string('payment_status',20);
+            $table->string('payment_id',50)->nullable();
             $table->timestamps();
         });
     }

@@ -15,6 +15,9 @@ class Order extends Model
         'qty',
         'amount',
         'payment_method',
-        'discount'
+        'discount',
+        'address',
+        'order_status',
+        'payment_status',
     ];
 }

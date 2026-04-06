@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <?php
 
 use App\Models\Cart;
@@ -10,60 +7,67 @@ use App\Models\Product;
 $user_id = Auth::id();
 // echo $user_id;
 
-include public_path('linkfile.php');
+if (!$user_id) {
+	header("Location: cart.php");
+}
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{{ asset('css/open-iconic-bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/aos.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/jquery.timepicker.css') }}">
+
+
+	<link rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+
+	<style>
+		#paymentLoader {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			width: 100%;
+			background: rgba(0, 0, 0, 0.75) no-repeat center center;
+			z-index: 10000;
+			color: white;
+		}
+	</style>
+</head>
+
 <body class="goto-here">
-	<div class="py-1 bg-primary">
-		<div class="container">
-			<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-				<div class="col-lg-12 d-block">
-					<div class="row d-flex">
-						<div class="col-md pr-4 d-flex topper align-items-center">
-							<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-							<span class="text">+ 1235 2355 98</span>
-						</div>
-						<div class="col-md pr-4 d-flex topper align-items-center">
-							<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-							<span class="text">youremail@email.com</span>
-						</div>
-						<div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-							<span class="text">3-5 Business days delivery &amp; Free Returns</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-		<div class="container">
-			<a class="navbar-brand" href="index.html">Vegefoods</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="oi oi-menu"></span> Menu
-			</button>
 
-			<div class="collapse navbar-collapse" id="ftco-nav">
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-					<li class="nav-item active dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
-						<div class="dropdown-menu" aria-labelledby="dropdown04">
-							<a class="dropdown-item" href="shop.html">Shop</a>
-							<a class="dropdown-item" href="wishlist.html">Wishlist</a>
-							<a class="dropdown-item" href="product-single.html">Single Product</a>
-							<a class="dropdown-item" href="cart.html">Cart</a>
-							<a class="dropdown-item" href="checkout.html">Checkout</a>
-						</div>
-					</li>
-					<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-					<li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-					<li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
-
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<?php include 'header.php'; ?>
 	<!-- END nav -->
 
 	<div class="hero-wrap hero-bread" style="background-image: url('images/bg_1.jpg');">
@@ -81,20 +85,20 @@ include public_path('linkfile.php');
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-xl-7 ftco-animate">
-					<form action="/billSubmit" method="POST" class="billing-form">
+					<form action="#" method="POST" class="billing-form">
 						@csrf
 						<h3 class="mb-4 billing-heading">Billing Details</h3>
 						<div class="row align-items-end">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="firstname">Firt Name</label>
-									<input type="text" class="form-control" name="first_name" placeholder="">
+									<label for="first_name">First Name</label>
+									<input type="text" class="form-control" id="first_name" name="first_name" placeholder="">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="lastname">Last Name</label>
-									<input type="text" class="form-control" name="last_name" placeholder="">
+									<label for="last_name">Last Name</label>
+									<input type="text" class="form-control" id="last_name" name="last_name" placeholder="">
 								</div>
 							</div>
 							<div class="w-100"></div>
@@ -103,7 +107,7 @@ include public_path('linkfile.php');
 									<label for="country">State / Country</label>
 									<div class="select-wrap">
 										<div class="icon"><span class="ion-ios-arrow-down"></span></div>
-										<select name="country" id="" class="form-control">
+										<select name="country" id="country" class="form-control">
 											<option value="India" selected>India</option>
 											<option value="Italy">Italy</option>
 											<option value="Philippines">Philippines</option>
@@ -117,52 +121,52 @@ include public_path('linkfile.php');
 							<div class="w-100"></div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="streetaddress">Street Address</label>
-									<input type="text" name="street_address" class="form-control" placeholder="House number and street name">
+									<label for="street_address">Street Address</label>
+									<input type="text" id="street_address" name="street_address" class="form-control" placeholder="House number and street name">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<input type="text" name="" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
+									<input type="text" id="landmark" name="landmark" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
 								</div>
 							</div>
 							<div class="w-100"></div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="towncity">Town / City</label>
-									<input type="text" name="city" class="form-control" placeholder="">
+									<label for="city">Town / City</label>
+									<input type="text" id="city" name="city" class="form-control" placeholder="">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="postcodezip">Postcode / ZIP *</label>
-									<input type="text" name="zip_code" class="form-control" placeholder="">
+									<label for="zip_code">Postcode / ZIP *</label>
+									<input type="text" id="zip_code" name="zip_code" class="form-control" placeholder="">
 								</div>
 							</div>
 							<div class="w-100"></div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="phone">Phone</label>
-									<input type="text" name="phone" class="form-control" placeholder="">
+									<input type="text" name="phone" id="phone" class="form-control" placeholder="">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="emailaddress">Email Address</label>
-									<input type="text" name="email" class="form-control" placeholder="">
+									<label for="email">Email Address</label>
+									<input type="email" name="email" id="email" class="form-control" placeholder="">
 								</div>
 							</div>
 							<div class="w-100"></div>
 							<div class="col-md-12">
 								<div class="form-group mt-4">
 									<div class="radio">
-										<label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
-										<label><input type="radio" name="optradio"> Ship to different address</label>
+										<!-- <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
+										<label><input type="radio" name="optradio"> Ship to different address</label> -->
 									</div>
 								</div>
 							</div>
 						</div>
-				
+
 				</div>
 				<div class="col-xl-5">
 					<div class="row mt-5 pt-3">
@@ -184,6 +188,9 @@ include public_path('linkfile.php');
 							foreach ($result as $item) {
 
 								$detail = Product::find($item->item_id);
+								if (!$detail) {
+									continue;
+								}
 
 								$Total = $item->quantity * $detail->price;
 								$subTotal += $Total;
@@ -193,20 +200,20 @@ include public_path('linkfile.php');
 								<h3 class="billing-heading mb-4">Cart Total</h3>
 								<p class="d-flex">
 									<span>Subtotal</span>
-									<span>&#8377; <?php echo $subTotal; ?></span>
+									<span id="sub_total">&#8377; <?php echo $subTotal; ?></span>
 								</p>
 								<p class="d-flex">
 									<span>Delivery</span>
-									<span>&#8377; <?php echo $ship_charge; ?> </span>
+									<span id="delivery">&#8377; <?php echo $ship_charge; ?> </span>
 								</p>
 								<p class="d-flex">
 									<span>Discount</span>
-									<span>&#8377; <?php echo $Total; ?> </span>
+									<span id="discount">&#8377; <?php echo $totalDiscount; ?> </span>
 								</p>
 								<hr>
 								<p class="d-flex total-price">
 									<span>Total</span>
-									<span>&#8377; <?php echo $netTotal = $subTotal - ($totalDiscount + $ship_charge) ?> </span>
+									<span id="net_total">&#8377; <?php echo $netTotal = $subTotal - ($totalDiscount + $ship_charge) ?> </span>
 								</p>
 							</div>
 						</div>
@@ -216,32 +223,26 @@ include public_path('linkfile.php');
 								<div class="form-group">
 									<div class="col-md-12">
 										<div class="radio">
-											<label><input type="radio" value="COD"  name="optradio" class="mr-2" checked> COD</label>
+											<label><input type="radio" value="COD" name="optradio" class="mr-2" checked> COD</label>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="col-md-12">
 										<div class="radio">
-											<label><input type="radio" value="Check Payment" name="optradio" class="mr-2"> Check Payment</label>
+											<label><input type="radio" value="RAZORPAY" name="optradio" class="mr-2"> Razorpay Payment</label>
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<div class="col-md-12">
-										<div class="radio">
-											<label><input type="radio" value="Paypal" name="optradio" class="mr-2"> Paypal</label>
-										</div>
-									</div>
-								</div>
+
 								<div class="form-group">
 									<div class="col-md-12">
 										<div class="checkbox">
-											<label><input type="checkbox" value="" class="mr-2"> I have read and accept the terms and conditions</label>
+											<label><input required type="checkbox" id="accept_check" name="accept_check" value="" class="mr-2"> I have read and accept the terms and conditions</label>
 										</div>
 									</div>
 								</div>
-								<p><input type="submit" value="Place an order" class="btn btn-primary py-3 px-4"></p>
+								<p><input type="button" id="placeOrderBtn" value="Place an order" class="btn btn-primary py-3 px-4"></p>
 							</div>
 						</div>
 					</div>
@@ -346,13 +347,23 @@ include public_path('linkfile.php');
 	</footer>
 
 
-
 	<!-- loader -->
 	<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
 			<circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
 			<circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" />
 		</svg></div>
 
+	<div id="paymentLoader">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<div class="spinner-border" style="height: 4rem; width: 4rem; color: #007bff; "></div>
+			</div>
+			<div class="col-sm-12 text-center">
+				Making Payment...
+			</div>
+
+		</div>
+	</div>
 
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery-migrate-3.0.1.min.js"></script>
@@ -371,6 +382,240 @@ include public_path('linkfile.php');
 	<script src="js/google-map.js"></script>
 	<script src="js/main.js"></script>
 
+	<script src="{{ asset('js/sweetalert2.min.js') }} "></script>
+
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+	<script>
+		function validateEmail(email) {
+			var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return re.test(email);
+		}
+
+		$(function() {
+
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			$("#placeOrderBtn").on("click", function() {
+
+				let first_name = $("#first_name").val().trim();
+				let last_name = $("#last_name").val().trim();
+				let country = $("#country").val();
+				let street_address = $("#street_address").val().trim();
+				let landmark = $("#landmark").val().trim();
+				let city = $("#city").val().trim();
+				let zip_code = $("#zip_code").val().trim();
+				let phone = $("#phone").val().trim();
+				let email = $("#email").val().trim();
+
+				if (first_name.length < 2) {
+					Swal.fire("Your First name is mandatory.", "", "error");
+					return;
+				}
+				if (last_name.length < 2) {
+					Swal.fire("Your Last name is mandatory.", "", "error");
+					return;
+				}
+				if (country == '') {
+					Swal.fire("Please Select any Country.", "", "error");
+					return;
+				}
+				if (street_address == '') {
+					Swal.fire("Please Add Strret Address.", "", "error");
+					return;
+				}
+				// if (landmark == '') {
+				// 	Swal.fire("Enter Landmark.", "", "error");
+				// 	return;
+				// }
+				if (city == '') {
+					Swal.fire("Enter City Name.", "", "error");
+					return;
+				}
+				if (zip_code.length < 6 || zip_code.length > 6) {
+					Swal.fire("Enter valid pincode.", "", "error");
+					return;
+				}
+				if (phone.length < 10 || phone.length > 14) {
+					Swal.fire("Enter valid Phone Number.", "", "error");
+					return;
+				}
+				if (!validateEmail(email)) {
+					Swal.fire("Enter valid Email Address.", "", "error");
+					return;
+				}
+
+				let payment_mode = '';
+				if ($("input[name='optradio']").is(":checked")) {
+					payment_mode = $("input[name='optradio']:checked").val();
+				}
+
+				if (!$('#accept_check').is(':checked')) {
+					Swal.fire('Please Accept with Terms & Conditions', '', 'error');
+					return;
+				}
+
+				// console.log(payment_mode)
+				var formData = new FormData();
+				formData.append("make_payment", true);
+				formData.append("first_name", first_name);
+				formData.append("last_name", last_name);
+				formData.append("country", country);
+				formData.append("street_address", street_address);
+				formData.append("landmark", landmark);
+				formData.append("city", city);
+				formData.append("zip_code", zip_code);
+				formData.append("phone", phone);
+				formData.append("email", email);
+				formData.append("payment_mode", payment_mode);
+
+				$.ajax({
+					url: "/billSubmit",
+					method: "POST",
+					data: formData,
+					contentType: false,
+					processData: false,
+					cache: false,
+					beforeSend: function() {
+						$("#paymentLoader").css("display", "flex");
+					},
+					success: function(data) {
+						$("#paymentLoader").css("display", "none");
+						console.log(data)
+						var resp = $.parseJSON(data);
+						if (resp.cod) { // COD 
+							$("#first_name").val('');
+							$("#last_name").val('');
+							$("#street_address").val('');
+							$("#landmark").val('');
+							$("#city").val('');
+							$("#zip_code").val('');
+							$("#phone").val('');
+							$("#email").val('');
+
+							$('#sub_total').html('&#8377; 0');
+							$('#delivery').html('&#8377; 0');
+							$('#discount').html('&#8377; 0');
+							$('#net_total').html('&#8377; 0');
+
+							$('#accept_check').prop('checked', false);
+
+							Swal.fire('Order Placed Successfully', '', 'success');
+							setTimeout(function() {
+								location.href = '/my-orders';
+							}, 1000);
+
+							return;
+
+						}
+						if (resp.empty) {
+							Swal.fire("Cart is Empty, You can't Order Again", '', 'error');
+							return;
+						}
+
+						if (resp.error) {
+							Swal.fire("Something went wrong", resp.error, "error");
+							return;
+						}
+
+						// RAZORPAY dialog open
+
+						var options = {
+							"key": "{{ config('services.razorpay.key') }}",
+							"amount": resp.amount,
+							"currency": "INR",
+							"name": "Acme Corp",
+							"description": "Test Transaction",
+							"image": "https://example.com/your_logo",
+							"order_id": resp.id,
+							"handler": function(response) { // executes when payment is successful
+								let payment_id = response.razorpay_payment_id;
+								let order_id = response.razorpay_order_id;
+								let signature = response.razorpay_signature;
+
+								$("#paymentLoader").css("display", "flex");
+
+								let formData = new FormData();
+								formData.append('verifyPayment', JSON.stringify(response));
+								$.ajax({
+									url: "/billSubmit",
+									method: "POST",
+									data: formData,
+									processData: false,
+									contentType: false,
+									success: function(data) {
+										console.log('payment verification response: ' + data)
+										$("#paymentLoader").css("display", "none");
+
+										if (data.trim() == '1') {
+											$("#first_name").val('');
+											$("#last_name").val('');
+											$("#street_address").val('');
+											$("#landmark").val('');
+											$("#city").val('');
+											$("#zip_code").val('');
+											$("#phone").val('');
+											$("#email").val('');
+
+											$('#sub_total').html('&#8377; 0');
+											$('#delivery').html('&#8377; 0');
+											$('#discount').html('&#8377; 0');
+											$('#net_total').html('&#8377; 0');
+
+											$('#accept_check').prop('checked', false);
+											Swal.fire('Order Placed Successfully', '', 'success');
+
+											setTimeout(function() {
+												location.href = '/my-orders';
+											}, 1000);
+										} else {
+											Swal.fire("Something went wrong", data, "error");
+										}
+
+									},
+									error: function(xhr, status, error) {
+										console.error(xhr.responseText);
+									},
+								});
+							},
+							"prefill": {
+								"name": "Rajat Agrawal", //your customer's name
+								"email": "rajatagrawal9394@gmail.com",
+								"contact": "8191816126"
+							},
+							"notes": {
+								"address": "Razorpay Corporate Office"
+							},
+							"theme": {
+								"color": "#3399cc"
+							}
+						};
+						var rzp1 = new Razorpay(options);
+						rzp1.on('payment.failed', function(response) {
+							alert(response.error.code);
+							alert(response.error.description);
+							alert(response.error.source);
+							alert(response.error.step);
+							alert(response.error.reason);
+							alert(response.error.metadata.order_id);
+							alert(response.error.metadata.payment_id);
+						});
+						rzp1.open();
+
+					},
+					error: function(xhr, status, error) {
+						console.error(xhr.responseText);
+					},
+				})
+
+			})
+
+		})
+	</script>
 
 	<script>
 		$(document).ready(function() {

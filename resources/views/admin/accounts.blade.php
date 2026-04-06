@@ -100,7 +100,7 @@
             </ul>
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link d-block" href="login.html">
+                <a class="nav-link d-block" href="/">
                   Admin, <b>Logout</b>
                 </a>
               </li>

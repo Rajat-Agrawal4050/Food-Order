@@ -11,11 +11,37 @@ use App\Models\Product;
 
 $user_id = Auth::id();
 // echo $user_id;
-
-include public_path('linkfile.php');
 ?>
 
 <body class="goto-here">
+<head>
+	<title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{{ asset('css/open-iconic-bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/aos.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/jquery.timepicker.css') }}">
+
+
+	<link rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 
     <?php include 'header.php'; ?>
 
@@ -41,11 +67,11 @@ include public_path('linkfile.php');
                                 <tr class="text-center">
 
                                     <th>Order Id</th>
-                                    <th></th>
+                                    <th>Image</th>
                                     <th>Product name</th>
                                     <th>Price</th>
-                                    <th>Quantity</th>
-
+                                    <th>Payment Method</th>
+                                    <th>Order Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,11 +81,11 @@ include public_path('linkfile.php');
                                 $result = Order::where(
                                     function ($query) use ($user_id) {
                                         if ($user_id)
-                                            $query->where('user_id', '=', $user_id);
+                                            $query->where('user_id', '=', $user_id)->where('order_status', '=', 'COMPLETED');
                                         else
-                                            $query->where('user_id', '=', '-1');
+                                            $query->where('user_id', '=', '-1')->where('order_status', '=', 'COMPLETED');
                                     }
-                                )->get();
+                                )->latest()->get();
 
                                 $subTotal = $totalDiscount = $ship_charge = 0;
                                 $netTotal = $i = 0;
@@ -74,6 +100,8 @@ include public_path('linkfile.php');
                                     $ids = explode(',', $id);
 
                                     $qtys = explode(',', $qty);
+
+                                    $order_date = $order->created_at;
 
                                     $i = 0;
                                     foreach ($ids as $id) {
@@ -91,11 +119,8 @@ include public_path('linkfile.php');
 
                                             </td>
                                             <td class="image-prod">
-                                                <div class="img" style="background-image:url(<?php echo 'images/' . $detail->image ?>);"></div>
+                                                <div class="img" style="background-image:url(<?Php echo asset('storage/img/' . $detail->image) ?>)"></div>
                                             </td>
-
-
-
 
                                             <td class="product-name">
                                                 <h3>{{$detail->product_name}}</h3>
@@ -105,7 +130,11 @@ include public_path('linkfile.php');
                                             <td class="price">&#8377;<?Php echo ($detail->price - $detail->discount) ?></td>
 
                                             <td class="product-name">
-                                                <h3>{{ $qtys[$i] }}</h3>
+                                                <p>{{ $order->payment_method }}</p>
+                                            </td>
+
+                                            <td>
+                                            <p><?Php echo date('d, F Y \a\t h:i a',strtotime($order_date)); ?></p>
                                             </td>
 
 
@@ -230,22 +259,22 @@ include public_path('linkfile.php');
         </svg></div>
 
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.easing.1.3.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/aos.js"></script>
-    <script src="js/jquery.animateNumber.min.js"></script>
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/scrollax.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.easing.1.3.js"></script>
+    <script src="/js/jquery.waypoints.min.js"></script>
+    <script src="/js/jquery.stellar.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/aos.js"></script>
+    <script src="/js/jquery.animateNumber.min.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/scrollax.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="js/google-map.js"></script>
-    <script src="js/main.js"></script>
+    <script src="/js/google-map.js"></script>
+    <script src="/js/main.js"></script>
 
     <script>
         <?php

@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <?php
 
 use App\Models\Cart;
@@ -10,8 +7,56 @@ use App\Models\Product;
 $user_id = Auth::id();
 // echo $user_id;
 
-include public_path('linkfile.php');
+// include public_path('linkfile.php');
+if (isset($_GET['removeItem'])) {
+
+	$id = $_GET['id'];
+
+	// $instance = Cart::where('user_id', '=', $user_id)->where('item_id', '=', $pid);
+	$instance = Cart::find($id);
+
+	$no_of_affected_rows = $instance->delete();
+	if ($no_of_affected_rows) {
+		echo 1;
+	} else {
+		echo 0;
+	}
+	die;
+}
 ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{{ asset('css/open-iconic-bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/aos.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/jquery.timepicker.css') }}">
+
+
+	<link rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+</head>
 
 <body class="goto-here">
 
@@ -55,21 +100,25 @@ include public_path('linkfile.php');
 										else
 											$query->where('user_id', '=', '-1');
 									}
-								)->get();
+								)->latest()->get();
 								$subTotal = $totalDiscount = $ship_charge = 0;
 								$netTotal = $i = 0;
 								foreach ($result as $item) {
-$i++;
+									
 									$detail = Product::find($item->item_id);
+									if(!$detail){
+										continue;
+									}
 
 									$Total = $item->quantity * $detail->price;
 									$subTotal += $Total;
+									$i++;
 								?>
 									<tr class="text-center">
-										<td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
+										<td class="product-remove"><a href="#" onclick="deleteItem(this)" data-id="{{$item->id}}"><span class="ion-ios-close"></span></a></td>
 
 										<td class="image-prod">
-											<div class="img" style="background-image:url(<?php echo 'images/' . $detail->image ?>);"></div>
+											<div class="img" style="background-image:url(<?Php echo asset('storage/img/' . $detail->image) ?>);"></div>
 										</td>
 
 										<td class="product-name">
@@ -88,7 +137,7 @@ $i++;
 										<td class="total">&#8377;<?php echo $Total; ?></td>
 									</tr><!-- END TR-->
 								<?php }
-								if($i==0){
+								if ($i == 0) {
 									echo '<tr><h1 style="margin: 0px auto;">Cart is Empty</h1></tr>';
 								}
 								?>
@@ -156,8 +205,9 @@ $i++;
 							<span>&#8377; <?php echo $netTotal  ?></span>
 						</p>
 					</div>
-					
-					<p><a href="<?php if($netTotal>0) echo '/checkout'; else echo '#'; ?>" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+
+					<p><a href="<?php if ($netTotal > 0) echo '/checkout';
+								else echo '#'; ?>" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
 				</div>
 			</div>
 		</div>
@@ -283,15 +333,62 @@ $i++;
 	<script src="js/google-map.js"></script>
 	<script src="js/main.js"></script>
 
+	<script src="{{ asset('js/sweetalert2.min.js') }} "></script>
+
+
 	<script>
-	<?php
-	if (!$user_id) {
-		?>
-		window.location.href='/login';
 		<?php
-	}
-	?>
-</script>
+		if (!$user_id) {
+		?>
+			window.location.href = '/login';
+		<?php
+		}
+		?>
+	</script>
+
+	<script>
+		function deleteItem(el) {
+
+			let pid = $(el).data('id');
+
+			Swal.fire({
+				title: 'Do you want to delete item in Cart?',
+				showDenyButton: true,
+				showCancelButton: false,
+				confirmButtonText: `Delete`,
+				denyButtonText: `Don't delete`,
+			}).then((result) => {
+
+				if (result.isConfirmed) {
+
+					$.ajax({
+						type: "GET",
+						data: {
+							id: pid,
+							removeItem: true,
+						},
+						cache: false,
+						beforeSend: function() {
+
+						},
+						success: function(data) {
+							console.log(data)
+							if (data.trim() == 1) {
+								Swal.fire('Successfully Deleted', '', 'success');
+								$(el).parent().parent().fadeOut(400)
+							} else {
+								Swal.fire('Something went wrong', '', 'error');
+							}
+
+						}
+
+					});
+
+				}
+			});
+
+		}
+	</script>
 
 	<script>
 		$(document).ready(function() {

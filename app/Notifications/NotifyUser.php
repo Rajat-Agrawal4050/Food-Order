@@ -10,15 +10,15 @@ use Illuminate\Notifications\Notification;
 class NotifyUser extends Notification
 {
     use Queueable;
-    public $msg;
+    public $email;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($msg)
+    public function __construct($email)
     {
         //
-        $this->msg=$msg;
+        $this->email=$email;
     }
 
     /**
@@ -51,7 +51,7 @@ class NotifyUser extends Notification
     {
         return [
             //
-            "message" => $this->msg
+            "message" => $this->email
         ];
     }
 }
